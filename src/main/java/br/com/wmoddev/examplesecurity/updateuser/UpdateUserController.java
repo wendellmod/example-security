@@ -2,9 +2,12 @@ package br.com.wmoddev.examplesecurity.updateuser;
 
 import static br.com.wmoddev.examplesecurity.util.ResponseEntityUtil.*;
 
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,14 +24,16 @@ public class UpdateUserController {
 		this.service = service;
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@PatchMapping("{idUser}/update-password")
-	public ResponseEntity<?> update(@PathVariable String idUser,
+	public ResponseEntity<?> update(@PathVariable UUID idUser,
 									@RequestBody(required = true) @Valid UpdateUserPasswordDTO dto) {
-		return ResponseEntity.created(uriGenerate(idUser)).body(service.execute(idUser, dto));
+		return ResponseEntity.created(uriGenerate(idUser.toString())).body(service.execute(idUser, dto));
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@PatchMapping("{idUser}/enable-or-disable-account")
-	public ResponseEntity<?> update(@PathVariable String idUser) {
+	public ResponseEntity<?> update(@PathVariable UUID idUser) {
 		service.execute(idUser, null);
 		return ResponseEntity.noContent().build();
 	}

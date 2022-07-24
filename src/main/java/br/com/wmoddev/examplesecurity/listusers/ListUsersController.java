@@ -1,6 +1,7 @@
 package br.com.wmoddev.examplesecurity.listusers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ public class ListUsersController {
 		this.service = service;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping
 	public ResponseEntity<?> getAll(@RequestParam(required = false) Role role) {
 		return ResponseEntity.ok(service.execute(role));

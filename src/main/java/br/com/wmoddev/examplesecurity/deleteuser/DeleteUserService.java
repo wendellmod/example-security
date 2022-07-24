@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.com.wmoddev.examplesecurity.config.security.AuthenticatedUser;
 import br.com.wmoddev.examplesecurity.entity.LoginUser;
 import br.com.wmoddev.examplesecurity.repository.LoginUserRepository;
 
@@ -15,22 +16,19 @@ import br.com.wmoddev.examplesecurity.repository.LoginUserRepository;
 public class DeleteUserService {
 	
 	private final LoginUserRepository loginUserRepository;
+	private final AuthenticatedUser authenticatedUser;
 
-	public DeleteUserService(final LoginUserRepository loginUserRepository) {
+	public DeleteUserService(final LoginUserRepository loginUserRepository,
+							 final AuthenticatedUser authenticatedUser) {
 		this.loginUserRepository = loginUserRepository;
+		this.authenticatedUser = authenticatedUser;
 	}
 	
 	@Transactional
-	public void execute(String idUser) {
-		UUID id = UUID.fromString(idUser);
-		findById(id);
-		loginUserRepository.deleteRelationshipsByLoginUserId(id);
-		loginUserRepository.deleteById(id);
-	}
-	
-	private LoginUser findById(UUID id) {
-		return loginUserRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+	public void execute(UUID idUser) {
+		authenticatedUser.get(idUser);
+		loginUserRepository.deleteRelationshipsByLoginUserId(idUser);
+		loginUserRepository.deleteById(idUser);
 	}
 
 }

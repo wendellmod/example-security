@@ -19,7 +19,7 @@ public class CreateUserController {
 	public CreateUserController(final CreateUserService service) {
 		this.service = service;
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<?> create(@RequestBody @Valid CreateUserDTO dto) {
 		return ResponseEntity

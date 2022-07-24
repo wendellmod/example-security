@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.com.wmoddev.examplesecurity.config.security.AuthenticatedUser;
 import br.com.wmoddev.examplesecurity.entity.LoginUser;
 import br.com.wmoddev.examplesecurity.repository.LoginUserRepository;
 
@@ -15,16 +16,18 @@ public class UpdateUserService {
 	
 	private final LoginUserRepository loginUserRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final AuthenticatedUser authenticatedUser;
 
 	public UpdateUserService(final LoginUserRepository loginUserRepository,
-							 final PasswordEncoder passwordEncoder) {
+							 final PasswordEncoder passwordEncoder,
+							 final AuthenticatedUser authenticatedUser) {
 		this.loginUserRepository = loginUserRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.authenticatedUser = authenticatedUser;
 	}
 
-	public LoginUserDTO execute(String idUser, UpdateUserPasswordDTO dto) {
-		UUID id = UUID.fromString(idUser);
-		LoginUser loginUser = findById(id);
+	public LoginUserDTO execute(UUID idUser, UpdateUserPasswordDTO dto) {
+		LoginUser loginUser = authenticatedUser.get(idUser);
 		
 		if (dto != null) updatePassword(loginUser, dto);
 		else enableOrDisableAccount(loginUser);
@@ -48,10 +51,6 @@ public class UpdateUserService {
 	private void enableOrDisableAccount(LoginUser loginUser) {
 		loginUser.setDisabled(!loginUser.getDisabled());
 	}
-	
-	private LoginUser findById(UUID id) {
-		return loginUserRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-	}
+
 
 }

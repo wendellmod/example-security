@@ -2,33 +2,25 @@ package br.com.wmoddev.examplesecurity.detailuser;
 
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
+import br.com.wmoddev.examplesecurity.config.security.AuthenticatedUser;
 import br.com.wmoddev.examplesecurity.entity.LoginUser;
-import br.com.wmoddev.examplesecurity.repository.LoginUserRepository;
 
 @Service
 public class DetailUserService {
 	
-	private final LoginUserRepository loginUserRepository;
+	private final AuthenticatedUser authenticatedUser;
 
-	public DetailUserService(final LoginUserRepository loginUserRepository) {
-		this.loginUserRepository = loginUserRepository;
+	public DetailUserService(final AuthenticatedUser authenticatedUser) {
+		this.authenticatedUser = authenticatedUser;
 	}
 
-	public DetailUserDTO execute(String idUser) {
-		UUID id = UUID.fromString(idUser);
+	public DetailUserDTO execute(UUID idUser) {
 		
-		LoginUser loginUser = getById(id);
+		LoginUser loginUser = authenticatedUser.get(idUser);
 		
 		return new DetailUserDTO(loginUser);
-	}
-	
-	private LoginUser getById(UUID id) {
-		return loginUserRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
 }
