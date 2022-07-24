@@ -24,7 +24,7 @@ public class UserDetailsUtil {
 				.accountExpired(false)
 				.accountLocked(false)
 				.credentialsExpired(false)
-				.disabled(false)
+				.disabled(lu.getDisabled())
 				.build();
 	}
 	

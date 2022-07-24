@@ -39,6 +39,7 @@ public class CreateUserService {
 		LoginUser loginUser = LoginUser.builder()
 											.username(dto.getUsername())
 											.password(passwordEncoder.encode(dto.getPassword()))
+											.disabled(false)
 											.authorities(authorities)
 											.build();
 		LoginUser newLoginUser = create(loginUser);
@@ -69,5 +70,9 @@ public class CreateUserService {
 		return authorityRepository.findByRole(role)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Authority " + role.toString() + " does not exist!"));
 	}
+	
+//	insert into examplesec.tb_authority values (gen_random_uuid(), 'ROLE_USER');
+//	insert into examplesec.tb_authority values (gen_random_uuid(), 'ROLE_ADMIN');
+//	insert into examplesec.tb_authority values (gen_random_uuid(), 'ROLE_APP');
 
 }

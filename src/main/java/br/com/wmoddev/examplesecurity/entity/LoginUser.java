@@ -7,9 +7,10 @@ import javax.persistence.*;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Getter
+@Getter @Setter
 @Table(name = "tb_login_user", schema = "examplesec")
 public class LoginUser {
 
@@ -23,11 +24,14 @@ public class LoginUser {
 	@Column(nullable = false)
 	private String password;
 	
+	@Column(nullable = false)
+	private Boolean disabled;
+	
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Column(nullable = false)
     @JoinTable(name = "tb_roles_login_user", schema = "examplesec",
-            joinColumns = @JoinColumn(name = "login_user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "login_user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Authority> authorities;
 	
 	@Deprecated public LoginUser() {}
@@ -36,10 +40,12 @@ public class LoginUser {
 	public LoginUser(UUID id,
 					 String username,
 					 String password,
+					 Boolean disabled,
 					 List<Authority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.disabled = disabled;
 		this.authorities = authorities;
 	}
 
