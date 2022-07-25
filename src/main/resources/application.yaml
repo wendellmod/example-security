@@ -19,3 +19,7 @@ spring:
     username: postgres
     password: $postgres_169
 
+jwt:
+  token-prefix: Bearer 
+  secret: e3a14397-1982-4d71-bbad-392f45c9015f
+  expiration-minutes: 5

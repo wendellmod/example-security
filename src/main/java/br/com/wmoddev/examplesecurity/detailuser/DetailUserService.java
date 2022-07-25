@@ -4,21 +4,21 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import br.com.wmoddev.examplesecurity.config.security.AuthenticatedUser;
+import br.com.wmoddev.examplesecurity.config.security.AuthenticatedUserService;
 import br.com.wmoddev.examplesecurity.entity.LoginUser;
 
 @Service
 public class DetailUserService {
 	
-	private final AuthenticatedUser authenticatedUser;
+	private final AuthenticatedUserService authenticatedUserService;
 
-	public DetailUserService(final AuthenticatedUser authenticatedUser) {
-		this.authenticatedUser = authenticatedUser;
+	public DetailUserService(final AuthenticatedUserService authenticatedUserService) {
+		this.authenticatedUserService = authenticatedUserService;
 	}
 
 	public DetailUserDTO execute(UUID idUser) {
 		
-		LoginUser loginUser = authenticatedUser.get(idUser);
+		LoginUser loginUser = authenticatedUserService.get(idUser);
 		
 		return new DetailUserDTO(loginUser);
 	}

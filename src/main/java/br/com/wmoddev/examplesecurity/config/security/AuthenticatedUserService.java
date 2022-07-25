@@ -5,18 +5,18 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.wmoddev.examplesecurity.entity.LoginUser;
 import br.com.wmoddev.examplesecurity.repository.LoginUserRepository;
 
-@Component
-public class AuthenticatedUser {
+@Service
+public class AuthenticatedUserService {
 	
 	private final LoginUserRepository loginUserRepository;
 	
-	public AuthenticatedUser(final LoginUserRepository loginUserRepository) {
+	public AuthenticatedUserService(final LoginUserRepository loginUserRepository) {
 		this.loginUserRepository = loginUserRepository;
 	}
 	
