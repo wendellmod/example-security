@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import br.com.wmoddev.examplesecurity.config.security.jwt.JwtRequestFilter;
 
@@ -25,7 +28,7 @@ public class WebSecurityConfig {
 		this.jwtRequestFilter = jwtRequestFilter;
 	}
 
-	private static final String[] PUBLIC_MATCHERS_POST = { "/users", "/authenticate" };
+	private static final String[] PUBLIC_MATCHERS_POST = { "/users", "/auth/authenticate" };
 	
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -35,6 +38,7 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
+				.cors().and()
 				.csrf().disable()
 				.authorizeHttpRequests()
 				.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
@@ -45,5 +49,21 @@ public class WebSecurityConfig {
 		
 		return http.build();
 	}
+    
+	@Bean
+    CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod(HttpMethod.GET);
+        config.addAllowedMethod(HttpMethod.POST);
+        config.addAllowedMethod(HttpMethod.PUT);
+        config.addAllowedMethod(HttpMethod.DELETE);
+        config.addAllowedMethod(HttpMethod.OPTIONS);
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
     
 }

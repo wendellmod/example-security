@@ -38,14 +38,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		final String authorizationHeader = request.getHeader(jwtTokenUtil.getAuthorizationHeader());
+		final String authorizationHeader = jwtTokenUtil.getTokenFromRequest(request);
 		
         if (Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(jwtTokenUtil.getTokenPrefix())) {
             filterChain.doFilter(request, response);
             return;
         }
         
-        final String token = authorizationHeader.replace(jwtTokenUtil.getTokenPrefix() + " ", "");
+        final String token = authorizationHeader.replace(jwtTokenUtil.getTokenPrefix(), "");
         final String username = jwtTokenService.validateTokenAndGetUsername(token);
         
         if (Strings.isNullOrEmpty(username)) {

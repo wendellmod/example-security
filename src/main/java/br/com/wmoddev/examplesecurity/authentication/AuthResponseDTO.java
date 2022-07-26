@@ -5,10 +5,12 @@ import lombok.Getter;
 @Getter
 public class AuthResponseDTO {
 	
-	private String token;
+	private String accessToken;
+	
+//	private String refreshToken;
 
-	public AuthResponseDTO(String token) {
-		this.token = "Bearer " + token;;
+	public AuthResponseDTO(String accessToken) {
+		this.accessToken = accessToken;;
 	}
 
 }
